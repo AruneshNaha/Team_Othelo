@@ -54,15 +54,25 @@
             , appId: "1:388247049805:web:5e6107afe07b5eaf"
         };
         firebase.initializeApp(firebaseConfig);
-        var user;
+        var user = 0;var uid;
         var db = firebase.database();
         var booksref = db.ref('texmux/books');
         var c = 0;
+        firebase.auth().onAuthStateChanged(function (user) {
+                    if (user) {
+                        user = firebase.auth().currentUser;
+                        uid = user.uid;
+                    }
+                    else {                        
+                        window.location.href = "/login.html";
+                    }
+        });
 
         function aorw(id, method) {
             firebase.auth().onAuthStateChanged(function (user) {
                     if (user) {
                         user = firebase.auth().currentUser;
+                        uid = user.uid;
                         var ref = db.ref('/texmux/users/' + user.uid + '/' + method);
                         ref.child(id).update(true);
                         alert("Added to "+method);
@@ -74,7 +84,8 @@
         }
         booksref.limitToFirst(100).on('value',function (snapshot) {
             snapshot.forEach(function (childNodes) {
-                if(childNodes.toJSON().uid!=user.uid){
+                console.log(uid);
+                if(childNodes.toJSON().uid!=uid){
                 var cf = "<div class='clearfix'></div>";
                     if (c % 4 == 0) $("#product").append(cf);
                     var template = "<div class='col-md-3 col-sm-6'><div class='single-banner'><div class='product-wrapper'><a href='#' class='single-banner-image-wrapper'> <img alt='' src='" + childNodes.toJSON().img[0].url + "'><div class='price'><span>Rs.</span>"+ childNodes.toJSON().rprice +"</div></a><div class='product-description'><div class='functional-buttons'><a href='#' title='Add to Cart' onclick='aorw(\"" + childNodes.getRef().getKey() + "\",\"cart\")'> <i class='fa fa-shopping-cart'></i> </a><a href='#' title='Add to Wishlist' onclick='aorw(\"" + childNodes.getRef().getKey() + "\",\"wishlist\")'> <i class='fa fa-heart-o'></i> </a><a href='#' title='Quick view' data-toggle='modal' data-target='#productModal'> <i class='fa fa-compress'></i> </a></div></div></div><div class='banner-bottom text-center'><div class='banner-bottom-title' > <a href='#' style='text-overflow: ellipsis;'>" + childNodes.toJSON().bname.substring(0, 10) + "</a> </div></div></div></div>"
