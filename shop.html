@@ -43,7 +43,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-database.js"></script>
-        <script>
+    <script>
         var firebaseConfig = {
             apiKey: "AIzaSyDNJOYAnrIhA969TXbbtgMz1khfHrEmtmE"
             , authDomain: "ebooks-6202b.firebaseapp.com"
@@ -64,7 +64,7 @@
                     if (user) {
                         user = firebase.auth().currentUser;
                         var ref = db.ref('/texmux/users/' + user.uid + '/' + method);
-                        ref.child(id).set(true);
+                        ref.child(id).update(true);
                         alert("Added to "+method);
                     }
                     else {                        

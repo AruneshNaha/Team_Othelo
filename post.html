@@ -59,7 +59,6 @@
         var db = firebase.database();   
         var storage = firebase.storage();
         var ref = storage.ref();
-        firebase.database().ref('/texmux').set({});
         firebase.auth().onAuthStateChanged(function (user) {
                     if (user) {
                         usr=  firebase.auth().currentUser
@@ -79,7 +78,7 @@
             };
             var task = ref.child(name).put(file, metadata);
             task.then(snapshot => snapshot.ref.getDownloadURL()).then((url) => {
-                firebase.database().ref('/texmux/books/' + pushID + "/img/"+imgc++).set({url});
+                firebase.database().ref('/texmux/books/' + pushID + "/img/"+imgc++).update({url});
                 imgc++;
                 console.log(url);
             }).catch(console.error);
@@ -94,8 +93,8 @@
             var isbn = document.getElementById("isbn").value;
             var booksref = db.ref('/texmux/books').push();            
             pushID = booksref.key;
-            firebase.database().ref('/texmux/users/' + usr.uid+ "/post"+pushID+"/").set({pushID});
-            booksref.set({
+            firebase.database().ref('/texmux/users/' + usr.uid+ "/post"+pushID+"/").update({pushID});
+            booksref.update({
                 "bname": bname
                 , "desc": desc
                 , "mrp": mrp
@@ -103,7 +102,7 @@
                 , "isbn": isbn
                 , "date": date
                 , "uid" : usr.uid
-            , });
+            });
         }
     </script>
 </head>
